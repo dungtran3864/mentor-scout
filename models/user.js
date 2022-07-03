@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
 const passport = require("passport");
-
-const USER_ROLES = { STUDENT: "student", TEACHER: "teacher" };
+const {USER_ROLES} = require("../utils/constants");
 
 const User = new mongoose.Schema({
   name: {
@@ -18,6 +17,10 @@ const User = new mongoose.Schema({
     type: Date,
     require: true,
   },
+  courses: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course'
+  }]
 });
 
 User.plugin(passportLocalMongoose, {

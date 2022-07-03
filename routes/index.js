@@ -3,6 +3,7 @@ const router = express.Router();
 const authController = require("../controllers/authController");
 const validation = require("../utils/validation");
 const { check } = require("express-validator");
+const userController = require("../controllers/userController");
 
 router.post(
   "/register",
@@ -34,6 +35,20 @@ router.post(
   ],
   validation.validateInput,
   authController.login
+);
+
+router.post('/logout', authController.logOut)
+
+router.get(
+  "/teacher/:id",
+  validation.checkAuthentication,
+  userController.getTeacherById
+);
+
+router.get(
+  "/student/:id",
+  validation.checkAuthentication,
+  userController.getStudentById
 );
 
 module.exports = router;

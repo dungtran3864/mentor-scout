@@ -9,6 +9,12 @@ const validation = {
       return next();
     }
   },
+  checkAuthentication: (req, res, next) => {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.status(401).send('Access denied');
+  }
 };
 
 module.exports = validation;

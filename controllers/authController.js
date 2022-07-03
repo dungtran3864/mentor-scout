@@ -28,6 +28,14 @@ const authController = {
       res.send(req.user);
     });
   },
+  logOut: async (req, res, next) => {
+    req.logOut((err) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).send("User logged out successfully");
+    });
+  },
 };
 
 module.exports = authController;
