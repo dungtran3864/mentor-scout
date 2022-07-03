@@ -2,9 +2,21 @@ const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
 const passport = require("passport");
 
+const USER_ROLES = { STUDENT: "student", TEACHER: "teacher" };
+
 const User = new mongoose.Schema({
+  name: {
+    type: String,
+    require: true,
+  },
   role: {
     type: String,
+    enum: Object.values(USER_ROLES),
+    require: true,
+  },
+  birthday: {
+    type: Date,
+    require: true,
   },
 });
 
@@ -19,4 +31,3 @@ passport.serializeUser(UserModel.serializeUser());
 passport.deserializeUser(UserModel.deserializeUser());
 
 module.exports = UserModel;
-

@@ -4,7 +4,12 @@ const User = require("../models/user");
 const authController = {
   signUp: async (req, res) => {
     User.register(
-      new User({ email: req.body.email, role: req.body.role }),
+      new User({
+        email: req.body.email,
+        role: req.body.role,
+        name: req.body.name,
+        birthday: req.body.birthday,
+      }),
       req.body.password,
       (err) => {
         if (err) {
@@ -18,6 +23,7 @@ const authController = {
     );
   },
   login: (req, res) => {
+    req.body.email = req.body.email.toLowerCase();
     passport.authenticate("local")(req, res, function () {
       res.send(req.user);
     });
