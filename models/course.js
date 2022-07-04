@@ -5,6 +5,9 @@ const Course = mongoose.Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+  },
   teacher: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -17,4 +20,4 @@ const Course = mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model('Course', Course);
+module.exports = mongoose.model("Course", Course);

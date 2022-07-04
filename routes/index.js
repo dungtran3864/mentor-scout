@@ -4,6 +4,7 @@ const authController = require("../controllers/authController");
 const validation = require("../utils/validation");
 const { check } = require("express-validator");
 const userController = require("../controllers/userController");
+const courseController = require("../controllers/courseController");
 
 router.post(
   "/register",
@@ -37,7 +38,7 @@ router.post(
   authController.login
 );
 
-router.post('/logout', authController.logOut)
+router.post("/logout", authController.logOut);
 
 router.get(
   "/teacher/:id",
@@ -49,6 +50,14 @@ router.get(
   "/student/:id",
   validation.checkAuthentication,
   userController.getStudentById
+);
+
+router.post(
+  "/course",
+  validation.checkAuthentication,
+  [check("name", "Course name cannot be empty").notEmpty().trim()],
+  validation.validateInput,
+  courseController.create
 );
 
 module.exports = router;
