@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
 const passport = require("passport");
-const {USER_ROLES} = require("../utils/constants");
+const {USER_ROLES, GENDERS} = require("../utils/constants");
 
 const User = new mongoose.Schema({
   name: {
@@ -17,6 +17,11 @@ const User = new mongoose.Schema({
     type: Date,
     require: true,
   },
+  gender: {
+    type: Number,
+    enum: Object.values(GENDERS),
+    required: true
+  }
 });
 
 User.plugin(passportLocalMongoose, {

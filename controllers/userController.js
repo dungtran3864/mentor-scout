@@ -1,12 +1,10 @@
 const User = require("../models/user");
+const { USER_ROLES } = require("../utils/constants");
 
 const userController = {
   getTeacherById: async (req, res) => {
     try {
-      const user = await User.where("role")
-        .equals("teacher")
-        .where("_id")
-        .equals(req.params.id)
+      const user = await User.findOne({ role: "teacher", _id: req.params.id });
       res.status(200).send(user);
     } catch (err) {
       res.status(400).send(err);
@@ -14,13 +12,27 @@ const userController = {
   },
   getStudentById: async (req, res) => {
     try {
-      const user = await User.where("role")
-        .equals("student")
-        .where("_id")
-        .equals(req.params.id);
+      const user = await User.findOne({ role: "student", _id: req.params.id });
       res.status(200).send(user);
     } catch (err) {
       res.status(400).send(err);
+    }
+  },
+  updateInfo: async (req, res) => {
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: req.user.id },
+        {
+          email: req.body.email,
+          name: req.body.name,
+          birthday: req.body.birthday,
+          gender: req.body.gender,
+        },
+        { returnDocument: "after" }
+      );
+      res.status(200).send(user);
+    } catch (err) {
+      res.status(500).send(err);
     }
   },
 };

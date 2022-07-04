@@ -18,6 +18,7 @@ router.post(
     check("name", "Name is missing").notEmpty().trim(),
     check("password", "Password is missing").notEmpty().trim().escape(),
     check("role", "User role cannot be empty").notEmpty().trim(),
+    check("gender", "Gender cannot be empty").notEmpty().trim(),
     check("birthday")
       .notEmpty()
       .withMessage("Date cannot be empty")
@@ -48,6 +49,28 @@ router.get(
   userController.getStudentById
 );
 
+router.patch(
+  "/user",
+  validation.checkAuthentication,
+  [
+    check("email")
+      .notEmpty()
+      .withMessage("Email is missing")
+      .isEmail()
+      .withMessage("Email is not valid")
+      .normalizeEmail(),
+    check("name", "Name is missing").notEmpty().trim(),
+    check("gender", "Gender cannot be empty").notEmpty().trim(),
+    check("birthday")
+      .notEmpty()
+      .withMessage("Date cannot be empty")
+      .isDate()
+      .withMessage("Date is not valid"),
+  ],
+  validation.validateInput,
+  userController.updateInfo
+);
+
 router.post(
   "/course",
   validation.checkAuthentication,
@@ -59,7 +82,7 @@ router.post(
   courseController.create
 );
 
-router.patch(
+router.post(
   "/course/enroll/:id",
   validation.checkAuthentication,
   courseController.enroll
@@ -69,6 +92,17 @@ router.get(
   "/course/user",
   validation.checkAuthentication,
   courseController.getCoursesByUser
+);
+
+router.patch(
+  "/course/:id",
+  validation.checkAuthentication,
+  [
+    check("name", "Name cannot be empty").notEmpty().trim(),
+    check("capacity", "Capacity cannot be empty").notEmpty(),
+  ],
+  validation.validateInput,
+  courseController.updateInfo
 );
 
 router.get("/course", courseController.getCourses);

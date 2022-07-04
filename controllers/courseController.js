@@ -70,6 +70,32 @@ const courseController = {
       res.status(500).send(err);
     }
   },
+  updateInfo: async (req, res) => {
+    if (req.user.role === USER_ROLES.STUDENT) {
+      return res
+        .status(403)
+        .send(
+          "You're not a teacher. Only teachers can update the course's information"
+        );
+    }
+    try {
+      const course = await Course.findOne({
+        _id: req.params.id,
+        teacher: req.user.id,
+      });
+      if (!course) {
+        res.status(404).send("You don't have this course");
+      } else {
+        course.name = req.body.name;
+        course.description = req.body.description;
+        course.capacity = req.body.capacity;
+        await course.save();
+        res.status(200).send(course);
+      }
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  },
 };
 
 module.exports = courseController;
