@@ -40,11 +40,7 @@ router.post(
 
 router.post("/logout", authController.logOut);
 
-router.get(
-  "/teacher/:id",
-  validation.checkAuthentication,
-  userController.getTeacherById
-);
+router.get("/teacher/:id", userController.getTeacherById);
 
 router.get(
   "/student/:id",
@@ -55,15 +51,26 @@ router.get(
 router.post(
   "/course",
   validation.checkAuthentication,
-  [check("name", "Course name cannot be empty").notEmpty().trim()],
+  [
+    check("name", "Course name cannot be empty").notEmpty().trim(),
+    check("capacity", "Capacity cannot be empty").notEmpty(),
+  ],
   validation.validateInput,
   courseController.create
 );
 
-router.post(
+router.patch(
   "/course/enroll/:id",
   validation.checkAuthentication,
   courseController.enroll
 );
+
+router.get(
+  "/course/user",
+  validation.checkAuthentication,
+  courseController.getCoursesByUser
+);
+
+router.get("/course", courseController.getCourses);
 
 module.exports = router;

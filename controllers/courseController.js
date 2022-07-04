@@ -1,5 +1,4 @@
 const Course = require("../models/course");
-const User = require("../models/user");
 const { USER_ROLES } = require("../utils/constants");
 
 const courseController = {
@@ -16,22 +15,12 @@ const courseController = {
         name: req.body.name,
         description: req.body.description,
         teacher: req.user.id,
+        capacity: req.body.capacity,
       });
       await course.save();
-      User.findByIdAndUpdate(
-        req.user.id,
-        { $push: { courses: course } },
-        (err) => {
-          if (err) {
-            res
-              .status(500)
-              .send("Failed to add course to teacher's teaching list");
-          }
-          res.status(200).send(course);
-        }
-      );
+      res.status(200).send(course);
     } catch (err) {
-      res.status(500).send("Failed to create course");
+      res.status(500).send(err);
     }
   },
   enroll: async (req, res) => {
@@ -45,26 +34,40 @@ const courseController = {
     const course = await Course.findCourseById(req.params.id);
     if (course) {
       try {
+        if (course.students.length >= course.capacity) {
+          return res.status(500).send("This course is already full");
+        }
+        if (course.students.includes(req.user.id)) {
+          return res.status(500).send("Student already enrolls in this course");
+        }
         course.students.push(req.user.id);
         await course.save();
-        User.findByIdAndUpdate(
-          req.user.id,
-          { $push: { courses: course } },
-          (err) => {
-            if (err) {
-              console.log(err);
-              res
-                .status(500)
-                .send("Failed to add course to student's enrolled list");
-            }
-            res.status(200).send("Enrolled in this course successfully");
-          }
-        );
+        res.status(200).send("Enrolled in this course successfully");
       } catch (err) {
-        res.status(500).send("Failed to enroll in this course");
+        res.status(500).send(err);
       }
     } else {
       res.status(404).send("Course does not exist");
+    }
+  },
+  getCoursesByUser: async (req, res) => {
+    const field = req.user.role === USER_ROLES.STUDENT ? "students" : "teacher";
+    try {
+      const courses = await Course.where(field)
+        .equals(req.user.id)
+        .populate("teacher")
+        .populate("students");
+      res.status(200).send(courses);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  },
+  getCourses: async (req, res) => {
+    try {
+      const courses = await Course.find();
+      res.status(200).send(courses);
+    } catch (err) {
+      res.status(500).send(err);
     }
   },
 };

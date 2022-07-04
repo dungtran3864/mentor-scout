@@ -17,10 +17,6 @@ const User = new mongoose.Schema({
     type: Date,
     require: true,
   },
-  courses: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Course'
-  }]
 });
 
 User.plugin(passportLocalMongoose, {

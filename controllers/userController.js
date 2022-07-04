@@ -7,7 +7,6 @@ const userController = {
         .equals("teacher")
         .where("_id")
         .equals(req.params.id)
-        .populate("courses");
       res.status(200).send(user);
     } catch (err) {
       res.status(400).send(err);
