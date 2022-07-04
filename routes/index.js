@@ -60,4 +60,10 @@ router.post(
   courseController.create
 );
 
+router.post(
+  "/course/enroll/:id",
+  validation.checkAuthentication,
+  courseController.enroll
+);
+
 module.exports = router;

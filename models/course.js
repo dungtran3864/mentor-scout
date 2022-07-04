@@ -20,4 +20,8 @@ const Course = mongoose.Schema({
   ],
 });
 
+Course.statics.findCourseById = function (id) {
+  return this.findById(id);
+};
+
 module.exports = mongoose.model("Course", Course);
