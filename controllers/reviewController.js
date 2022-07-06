@@ -1,6 +1,5 @@
 const Review = require("../models/review");
 const Course = require("../models/course");
-const { USER_ROLES } = require("../utils/constants");
 const validation = require("../utils/validation");
 
 const reviewController = {
