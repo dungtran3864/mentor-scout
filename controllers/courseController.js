@@ -64,7 +64,9 @@ const courseController = {
   },
   getCourses: async (req, res) => {
     try {
-      const courses = await Course.find();
+      const courses = await Course.find()
+        .populate("teacher")
+        .populate("students");
       res.status(200).send(courses);
     } catch (err) {
       res.status(500).send(err);

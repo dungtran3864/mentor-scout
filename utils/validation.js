@@ -13,8 +13,11 @@ const validation = {
     if (req.isAuthenticated()) {
       return next();
     }
-    res.status(401).send('Access denied');
-  }
+    res.status(401).send("Access denied");
+  },
+  isQueryParamOmitted: (param) => {
+    return !param || param === "";
+  },
 };
 
 module.exports = validation;

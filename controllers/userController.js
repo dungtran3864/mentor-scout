@@ -1,5 +1,4 @@
 const User = require("../models/user");
-const { USER_ROLES } = require("../utils/constants");
 
 const userController = {
   getTeacherById: async (req, res) => {

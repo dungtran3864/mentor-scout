@@ -5,6 +5,7 @@ const validation = require("../utils/validation");
 const { check } = require("express-validator");
 const userController = require("../controllers/userController");
 const courseController = require("../controllers/courseController");
+const reviewController = require("../controllers/reviewController");
 
 router.post(
   "/register",
@@ -106,5 +107,18 @@ router.patch(
 );
 
 router.get("/course", courseController.getCourses);
+
+router.get("/review", reviewController.getReviews);
+
+router.post(
+  "/review",
+  validation.checkAuthentication,
+  [
+    check("rate", "Rate cannot be empty").notEmpty(),
+    check("course_id", "Course_id cannot be empty").notEmpty(),
+  ],
+  validation.validateInput,
+  reviewController.create
+);
 
 module.exports = router;
