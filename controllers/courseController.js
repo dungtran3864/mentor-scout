@@ -3,13 +3,6 @@ const { USER_ROLES } = require("../utils/constants");
 
 const courseController = {
   create: async (req, res) => {
-    if (req.user.role !== USER_ROLES.TEACHER) {
-      return res
-        .status(403)
-        .send(
-          "You're not a teacher. Only teachers are allowed to create courses."
-        );
-    }
     try {
       const course = new Course({
         name: req.body.name,
@@ -24,13 +17,6 @@ const courseController = {
     }
   },
   enroll: async (req, res) => {
-    if (req.user.role !== USER_ROLES.STUDENT) {
-      return res
-        .status(403)
-        .send(
-          "You're not a student. Only students are allowed to enroll in courses."
-        );
-    }
     const course = await Course.findCourseById(req.params.id);
     if (course) {
       try {
@@ -73,13 +59,6 @@ const courseController = {
     }
   },
   updateInfo: async (req, res) => {
-    if (req.user.role === USER_ROLES.STUDENT) {
-      return res
-        .status(403)
-        .send(
-          "You're not a teacher. Only teachers can update the course's information"
-        );
-    }
     try {
       const course = await Course.findOne({
         _id: req.params.id,

@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator");
+const { USER_ROLES } = require("./constants");
 
 const validation = {
   validateInput: (req, res, next) => {
@@ -17,6 +18,28 @@ const validation = {
   },
   isQueryParamOmitted: (param) => {
     return !param || param === "";
+  },
+  validateStudent: (req, res, next) => {
+    if (req.user.role !== USER_ROLES.STUDENT) {
+      return res
+        .status(403)
+        .send(
+          "You're not a student. Only students are allowed to perform this action."
+        );
+    } else {
+      return next();
+    }
+  },
+  validateTeacher: (req, res, next) => {
+    if (req.user.role !== USER_ROLES.TEACHER) {
+      return res
+        .status(403)
+        .send(
+          "You're not a teacher. Only teachers are allowed to perform this action."
+        );
+    } else {
+      return next();
+    }
   },
 };
 

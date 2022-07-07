@@ -80,12 +80,14 @@ router.post(
     check("capacity", "Capacity cannot be empty").notEmpty(),
   ],
   validation.validateInput,
+  validation.validateTeacher,
   courseController.create
 );
 
 router.post(
   "/course/enroll/:id",
   validation.checkAuthentication,
+  validation.validateStudent,
   courseController.enroll
 );
 
@@ -103,6 +105,7 @@ router.patch(
     check("capacity", "Capacity cannot be empty").notEmpty(),
   ],
   validation.validateInput,
+  validation.validateTeacher,
   courseController.updateInfo
 );
 
@@ -111,12 +114,14 @@ router.get("/course", courseController.getCourses);
 router.delete(
   "/course/:id",
   validation.checkAuthentication,
+  validation.validateTeacher,
   courseController.deleteCourse
 );
 
 router.delete(
   "/course/dropout/:id",
   validation.checkAuthentication,
+  validation.validateStudent,
   courseController.dropOut
 );
 
@@ -130,12 +135,14 @@ router.post(
     check("course_id", "Course_id cannot be empty").notEmpty(),
   ],
   validation.validateInput,
+  validation.validateStudent,
   reviewController.create
 );
 
 router.delete(
   "/review/:id",
   validation.checkAuthentication,
+  validation.validateStudent,
   reviewController.deleteReview
 );
 
