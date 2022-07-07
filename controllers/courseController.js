@@ -98,6 +98,18 @@ const courseController = {
       res.status(500).send(err);
     }
   },
+  deleteCourse: async (req, res) => {
+    const course = await Course.findOne({
+      _id: req.params.id,
+      teacher: req.user.id,
+    });
+    if (course) {
+      await course.remove();
+      res.status(200).send("Deleted course successfully");
+    } else {
+      res.status(403).send("You don't have this course");
+    }
+  },
 };
 
 module.exports = courseController;

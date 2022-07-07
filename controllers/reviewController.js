@@ -11,6 +11,9 @@ const reviewController = {
     if (!validation.isQueryParamOmitted(req.query.course_id)) {
       filter["course"] = req.query.course_id;
     }
+    if (!validation.isQueryParamOmitted(req.query.posted_by)) {
+      filter["posted_by"] = req.query.posted_by;
+    }
     try {
       const reviews = await Review.find(filter)
         .populate("teacher")
@@ -41,6 +44,22 @@ const reviewController = {
       });
       await review.save();
       res.status(200).send(review);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  },
+  deleteReview: async (req, res) => {
+    try {
+      const review = await Review.findOne({
+        _id: req.params.id,
+        posted_by: req.user.id,
+      });
+      if (review) {
+        review.remove();
+        res.status(200).send("Deleted review successfully");
+      } else {
+        res.status(403).send("You don't have this review");
+      }
     } catch (err) {
       res.status(500).send(err);
     }

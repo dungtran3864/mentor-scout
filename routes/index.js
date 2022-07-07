@@ -90,7 +90,7 @@ router.post(
 );
 
 router.get(
-  "/course/user",
+  "/user/course",
   validation.checkAuthentication,
   courseController.getCoursesByUser
 );
@@ -108,6 +108,12 @@ router.patch(
 
 router.get("/course", courseController.getCourses);
 
+router.delete(
+  "/course/:id",
+  validation.checkAuthentication,
+  courseController.deleteCourse
+);
+
 router.get("/review", reviewController.getReviews);
 
 router.post(
@@ -119,6 +125,12 @@ router.post(
   ],
   validation.validateInput,
   reviewController.create
+);
+
+router.delete(
+  "/review/:id",
+  validation.checkAuthentication,
+  reviewController.deleteReview
 );
 
 module.exports = router;
