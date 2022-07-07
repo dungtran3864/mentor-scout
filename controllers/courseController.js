@@ -110,6 +110,21 @@ const courseController = {
       res.status(403).send("You don't have this course");
     }
   },
+  dropOut: async (req, res) => {
+    try {
+      const course = await Course.findOne({ _id: req.params.id, students: req.user.id });
+      if (course) {
+        const index = course.students.indexOf(req.user.id);
+        course.students.splice(index, 1);
+        await course.save();
+        res.status(200).send("Dropout this course successfully");
+      } else {
+        res.status(403).send("You don't have this course");
+      }
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  },
 };
 
 module.exports = courseController;

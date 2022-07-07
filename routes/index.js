@@ -114,6 +114,12 @@ router.delete(
   courseController.deleteCourse
 );
 
+router.delete(
+  "/course/dropout/:id",
+  validation.checkAuthentication,
+  courseController.dropOut
+);
+
 router.get("/review", reviewController.getReviews);
 
 router.post(
