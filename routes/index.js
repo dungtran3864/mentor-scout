@@ -72,6 +72,8 @@ router.patch(
   userController.updateInfo
 );
 
+router.delete("/user", validation.checkAuthentication, userController.deleteAccount);
+
 router.post(
   "/course",
   validation.checkAuthentication,

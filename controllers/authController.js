@@ -9,6 +9,7 @@ const authController = {
         role: req.body.role,
         name: req.body.name,
         birthday: req.body.birthday,
+        gender: req.body.gender,
       }),
       req.body.password,
       (err) => {

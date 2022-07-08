@@ -1,4 +1,7 @@
 const User = require("../models/user");
+const { USER_ROLES } = require("../utils/constants");
+const Course = require("../models/course");
+const Review = require("../models/review");
 
 const userController = {
   getTeacherById: async (req, res) => {
@@ -32,6 +35,33 @@ const userController = {
       res.status(200).send(user);
     } catch (err) {
       res.status(500).send(err);
+    }
+  },
+  deleteAccount: async (req, res) => {
+    if (req.user.role === USER_ROLES.STUDENT) {
+      try {
+        await User.deleteOne({ _id: req.user.id }); // delete account
+        await Course.updateMany(
+          {},
+          {
+            $pull: {
+              students: req.user.id,
+            },
+          }
+        ); // remove student from enrolled courses
+        res.status(200).send("Deleted account successfully");
+      } catch (err) {
+        res.status(500).send(err);
+      }
+    } else {
+      try {
+        await User.deleteOne({ _id: req.user.id }); // delete account
+        await Course.deleteMany({ teacher: req.user.id }); // delete all courses taught by this teacher
+        await Review.deleteMany({ teacher: req.user.id }); // delete all reviews on courses taught by this teacher
+        res.status(200).send("Deleted account successfully");
+      } catch (err) {
+        res.status(500).send(err);
+      }
     }
   },
 };
