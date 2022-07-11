@@ -1,5 +1,6 @@
 const Course = require("../models/course");
 const { USER_ROLES } = require("../utils/constants");
+const _get = require('lodash/get');
 
 const courseController = {
   create: async (req, res) => {
@@ -50,7 +51,10 @@ const courseController = {
   },
   getCourses: async (req, res) => {
     try {
-      const courses = await Course.find()
+      const search = _get(req, "query.search", "");
+      const courses = await Course.find({
+        name: { $regex: search, $options: "i" },
+      })
         .populate("teacher")
         .populate("students");
       res.status(200).send(courses);
@@ -91,7 +95,10 @@ const courseController = {
   },
   dropOut: async (req, res) => {
     try {
-      const course = await Course.findOne({ _id: req.params.id, students: req.user.id });
+      const course = await Course.findOne({
+        _id: req.params.id,
+        students: req.user.id,
+      });
       if (course) {
         const index = course.students.indexOf(req.user.id);
         course.students.splice(index, 1);
