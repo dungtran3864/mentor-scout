@@ -44,6 +44,8 @@ router.post("/logout", authController.logOut);
 
 router.get("/teacher/:id", userController.getTeacherById);
 
+router.get("/teacher", userController.getTeachers);
+
 router.get(
   "/student/:id",
   validation.checkAuthentication,

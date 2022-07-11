@@ -2,14 +2,20 @@ const User = require("../models/user");
 const { USER_ROLES } = require("../utils/constants");
 const Course = require("../models/course");
 const Review = require("../models/review");
+const _get = require("lodash/get");
 
 const userController = {
   getTeacherById: async (req, res) => {
     try {
-      const user = await User.findOne({ role: "teacher", _id: req.params.id });
+      const result = await Promise.all([
+        User.findOne({ role: "teacher", _id: req.params.id }).lean(),
+        Course.find({ teacher: req.params.id }).lean(),
+      ]);
+      const [user, courses] = result;
+      user.courses = courses;
       res.status(200).send(user);
     } catch (err) {
-      res.status(400).send(err);
+      res.status(500).send(err);
     }
   },
   getStudentById: async (req, res) => {
@@ -62,6 +68,18 @@ const userController = {
       } catch (err) {
         res.status(500).send(err);
       }
+    }
+  },
+  getTeachers: async (req, res) => {
+    try {
+      const search = _get(req, "query.search", "");
+      const courses = await User.find({
+        name: { $regex: search, $options: "i" },
+        role: "teacher",
+      });
+      res.status(200).send(courses);
+    } catch (err) {
+      res.status(500).send(err);
     }
   },
 };
