@@ -1,6 +1,6 @@
 const Course = require("../models/course");
 const { USER_ROLES } = require("../utils/constants");
-const _get = require('lodash/get');
+const _get = require("lodash/get");
 
 const courseController = {
   create: async (req, res) => {
@@ -58,6 +58,14 @@ const courseController = {
         .populate("teacher")
         .populate("students");
       res.status(200).send(courses);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  },
+  getCourseById: async (req, res) => {
+    try {
+      const course = await Course.findById(req.params.id);
+      res.status(200).send(course);
     } catch (err) {
       res.status(500).send(err);
     }

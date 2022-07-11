@@ -74,7 +74,11 @@ router.patch(
   userController.updateInfo
 );
 
-router.delete("/user", validation.checkAuthentication, userController.deleteAccount);
+router.delete(
+  "/user",
+  validation.checkAuthentication,
+  userController.deleteAccount
+);
 
 router.post(
   "/course",
@@ -114,6 +118,8 @@ router.patch(
 );
 
 router.get("/course", courseController.getCourses);
+
+router.get("/course/:id", courseController.getCourseById);
 
 router.delete(
   "/course/:id",
