@@ -65,7 +65,11 @@ const courseController = {
   getCourseById: async (req, res) => {
     try {
       const course = await Course.findById(req.params.id);
-      res.status(200).send(course);
+      if (course) {
+        res.status(200).send(course);
+      } else {
+        res.status(404).send("This course does not exist");
+      }
     } catch (err) {
       res.status(500).send(err);
     }

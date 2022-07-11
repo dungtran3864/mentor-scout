@@ -12,8 +12,12 @@ const userController = {
         Course.find({ teacher: req.params.id }).lean(),
       ]);
       const [user, courses] = result;
-      user.courses = courses;
-      res.status(200).send(user);
+      if (user) {
+        user.courses = courses;
+        res.status(200).send(user);
+      } else {
+        res.status(404).send("This teacher does not exist");
+      }
     } catch (err) {
       res.status(500).send(err);
     }
@@ -21,7 +25,11 @@ const userController = {
   getStudentById: async (req, res) => {
     try {
       const user = await User.findOne({ role: "student", _id: req.params.id });
-      res.status(200).send(user);
+      if (user) {
+        res.status(200).send(user);
+      } else {
+        res.status(404).send("This student does not exist");
+      }
     } catch (err) {
       res.status(400).send(err);
     }
