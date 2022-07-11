@@ -64,7 +64,9 @@ const courseController = {
   },
   getCourseById: async (req, res) => {
     try {
-      const course = await Course.findById(req.params.id);
+      const course = await Course.findById(req.params.id)
+        .populate("teacher")
+        .populate("students");
       if (course) {
         res.status(200).send(course);
       } else {
